@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "424603804156",
+    "project_id": "trivitup",
+    "storage_bucket": "trivitup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424603804156:android:d4900d38dba6aa684f9279",
+        "android_client_info": {
+          "package_name": "com.example.trivitup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAY1B03BerzSMC5NUPepepbk8LZIvjscrM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
