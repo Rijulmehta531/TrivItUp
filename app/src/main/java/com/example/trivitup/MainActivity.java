@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Get the layout
-        LinearLayout layout = (LinearLayout) findViewById(R.id.button_layout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.button_cat);
         // Loop through the categories and create buttons for each
         for (String category : categories) {
             Button button = new Button(this);

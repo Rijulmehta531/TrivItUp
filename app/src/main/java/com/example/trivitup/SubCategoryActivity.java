@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.util.*;
 import java.util.HashMap;
@@ -20,6 +21,8 @@ public class SubCategoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_category);
+        // Get the layout
+        LinearLayout layout = (LinearLayout) findViewById(R.id.button_subcat);
 
         // Initialize and populate the subcategories
         subCategories = new HashMap<>();
@@ -43,6 +46,7 @@ public class SubCategoryActivity extends AppCompatActivity {
                 }
             });
             // Add the button to the layout
+            layout.addView(button);
         }
     }
     // Method to start the quiz
