@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "424603804156",
+    "firebase_url": "https://trivitup-default-rtdb.firebaseio.com",
     "project_id": "trivitup",
     "storage_bucket": "trivitup.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.trivitup"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "424603804156-n8s4etdekj3nnanrgkpgd72q0a4af6bs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trivitup",
+            "certificate_hash": "9d3aa64f11de197fc60ba69af37e06963c1ba244"
+          }
+        },
+        {
+          "client_id": "424603804156-jleo84ho6hdqn1506irunklnnbecfikr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAY1B03BerzSMC5NUPepepbk8LZIvjscrM"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424603804156-jleo84ho6hdqn1506irunklnnbecfikr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
