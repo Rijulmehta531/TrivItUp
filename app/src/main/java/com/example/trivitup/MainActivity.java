@@ -14,8 +14,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btn;
+    private Button logoutButton;
     private TextView welcomeTextView;
+    private Button playIndividuallyButton;
+    private Button selectedCategoryButton;
+
     // Define the categories
     String[] categories = {"Math", "Science", "General Knowledge", "Random"};
 
@@ -25,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         welcomeTextView = findViewById(R.id.WelcomeTV);
+        playIndividuallyButton = findViewById(R.id.playIndividuallyButton);
+        selectedCategoryButton = null;  // To keep track of the selected category
 
         // Get the current user from FirebaseAuth and Check if the user is authenticated
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -39,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //Logout button
-        btn = findViewById(R.id.logoutButton);
-        btn.setOnClickListener(new View.OnClickListener() {
+        // Logout button
+        logoutButton = findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
@@ -50,21 +55,58 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Get the layout
-        LinearLayout layout = (LinearLayout) findViewById(R.id.button_cat);
-        // Loop through the categories and create buttons for each
+// Loop through the categories and create buttons with radio button styling for each
+        LinearLayout layout = findViewById(R.id.button_cat);
         for (String category : categories) {
             Button button = new Button(this);
             button.setText(category);
+            button.setId(View.generateViewId());
+            button.setBackground(getDrawable(R.drawable.radio_button_background));  // Use a drawable for the radio button style
+
+            // Set margins to create spacing between buttons
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.button_margin_bottom)); // Adjust margin as needed
+
+            button.setLayoutParams(params);
+
             button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    openSubCategories(category);
+                @Override
+                public void onClick(View view) {
+                    onCategoryButtonClicked((Button) view);
                 }
             });
-            // Add the button to the layout
             layout.addView(button);
         }
+
+
+        // Play Individually button
+        playIndividuallyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selectedCategoryButton != null) {
+                    openSubCategories(selectedCategoryButton.getText().toString());
+                }
+            }
+        });
     }
+
+    // Method to handle button clicks for category selection
+    void onCategoryButtonClicked(Button clickedButton) {
+        if (selectedCategoryButton != null) {
+            // Reset the background and text color of the previously selected button
+            selectedCategoryButton.setBackground(getDrawable(R.drawable.radio_button_background));
+            selectedCategoryButton.setTextColor(getColor(R.color.default_text_color)); // Change to your default text color
+        }
+
+        // Set the background and text color of the clicked button to indicate selection
+        clickedButton.setBackground(getDrawable(R.drawable.radio_button_selected_background));
+        clickedButton.setTextColor(getColor(R.color.selected_text_color)); // Change to your selected text color
+        selectedCategoryButton = clickedButton;
+    }
+
 
     // Method to open the subcategories
     void openSubCategories(String category) {
