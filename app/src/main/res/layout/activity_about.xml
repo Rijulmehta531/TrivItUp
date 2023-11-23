@@ -14,7 +14,7 @@
         android:padding="16dp"
         android:text="About"
         android:textColor="#ffffff"
-        android:textSize="24sp" />
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="300dp"
@@ -51,7 +51,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="5. Answer all correct 3 questions, and you will receive 100 points, less than 3 will receive 0 points."
+            android:text="5. Answer all correct 3 questions, and you will receive 10 points, less than 3 will receive 0 points."
             android:layout_marginBottom="12dp" />
 
         <TextView

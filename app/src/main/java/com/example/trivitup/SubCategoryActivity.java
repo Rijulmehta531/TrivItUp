@@ -40,19 +40,33 @@ public class SubCategoryActivity extends AppCompatActivity {
         for (String subCategory : subCategoriesForCategory) {
             Button button = new Button(this);
             button.setText(subCategory);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            layoutParams.setMargins(0, 0, 0, 16);
+
+            button.setLayoutParams(layoutParams);
+
+            button.setTextColor(getResources().getColor(android.R.color.white));
+
+            button.setBackgroundResource(R.drawable.button_style);
+
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     startQuiz(subCategory);
                 }
             });
-            // Add the button to the layout
             layout.addView(button);
         }
+
+
     }
 
     // Method to start the quiz
     void startQuiz(String subCategory) {
-        // Sample questions for each subcategory
         ArrayList<Question> sampleQuestions = getSampleQuestions(subCategory);
 
         // Start the QuizActivity with the selected subcategory
