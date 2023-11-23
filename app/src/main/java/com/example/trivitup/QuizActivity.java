@@ -2,6 +2,7 @@ package com.example.trivitup;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,10 +11,22 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.CountDownTimer;
+import android.media.MediaPlayer;
+
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class QuizActivity extends AppCompatActivity {
@@ -66,6 +79,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button submitButton;
     private TextView timerTextView;
     private CountDownTimer countDownTimer;
+    private MediaPlayer mediaPlayer;
     private final long countdownInterval = 1000; // 1 second
     private final long totalQuizTimeMillis = 30000; // 30 seconds
 
@@ -74,6 +88,9 @@ public class QuizActivity extends AppCompatActivity {
     private int correctAnswers = 0;
     private TextView questionNumberTextView;
     private TextView subCategoryTextView;
+
+    private DatabaseReference leaderboardRef;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +113,12 @@ public class QuizActivity extends AppCompatActivity {
         if (questions != null && !questions.isEmpty()) {
             displayQuestion(questions.get(currentQuestionIndex));
         }
+
+        // Initialize Firebase database reference
+        leaderboardRef = FirebaseDatabase.getInstance().getReference().child("Leaderboard");
+
+        // Get the current user from FirebaseAuth
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,12 +228,53 @@ public class QuizActivity extends AppCompatActivity {
             }
 
             if (currentQuestionIndex == questions.size()) {
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                }
+
                 showQuizResultDialog(correctAnswers);
+                saveScoreToLeaderboard(currentUser.getUid(), currentUser.getDisplayName(), correctAnswers);
             }
         } else {
             Toast.makeText(this, "Please select an answer.", Toast.LENGTH_SHORT).show();
         }
+
     }
+
+    private void saveScoreToLeaderboard(String userId, String displayName, int correctAnswers) {
+        leaderboardRef.orderByChild("userId").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Convert 3 correct answers to 100 points
+                    int points = 10;
+
+                    // User already exists in the leaderboard, update the points
+                    for (DataSnapshot entrySnapshot : dataSnapshot.getChildren()) {
+                        LeaderboardEntry existingEntry = entrySnapshot.getValue(LeaderboardEntry.class);
+                        //int updatedPoints = existingEntry.getPoints() + correctAnswers;
+                        int updatedPoints = existingEntry.getPoints() + points;
+                        entrySnapshot.getRef().child("points").setValue(updatedPoints);
+                    }
+                } else {
+                    // User doesn't exist, add a new entry
+                    if (correctAnswers >= 3) {
+                        // Convert 3 correct answers to 100 points
+                        int points = 10;
+
+                        LeaderboardEntry entry = new LeaderboardEntry(userId, displayName, points);
+                        leaderboardRef.push().setValue(entry);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle potential errors
+            }
+        });
+    }
+
 
     private void showQuizResultDialog(int correctAnswers) {
         final Dialog dialog = new Dialog(this);
@@ -223,6 +287,14 @@ public class QuizActivity extends AppCompatActivity {
         goBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Pause the sound before leaving the activity
+                pauseSound();
+
+                // Stop the countdown timer
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                }
+
                 dialog.dismiss();
 
                 Intent intent = new Intent(QuizActivity.this, MainActivity.class);
@@ -233,4 +305,39 @@ public class QuizActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pauseSound();
+
+        // Stop the countdown timer
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        resumeSound();
+
+        if (currentQuestionIndex < questions.size()) {
+            startCountdownTimer();
+        }
+    }
+
+    private void pauseSound() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    private void resumeSound() {
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+        }
+    }
+
 }

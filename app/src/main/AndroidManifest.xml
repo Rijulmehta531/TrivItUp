@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TrivItUp"
         tools:targetApi="31">
-
+        <activity
+            android:name=".LeaderboardActivity"
+            android:exported="false" />
         <activity
             android:name=".AuthenticationActivity"
             android:exported="true">
@@ -22,19 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".QuizActivity"
             android:exported="false" />
-
         <activity
             android:name=".SubCategoryActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".AboutActivity" />
     </application>
 
 </manifest>

@@ -44,6 +44,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.2.0")
     implementation("com.google.firebase:firebase-auth:22.0.0")
     implementation ("com.google.android.gms:play-services-auth:20.2.0")
+    implementation ("com.google.firebase:firebase-database:20.2.0")
+
 
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies

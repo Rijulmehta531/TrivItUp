@@ -3,6 +3,7 @@ package com.example.trivitup;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView welcomeTextView;
     private Button playIndividuallyButton;
     private Button selectedCategoryButton;
+    private Button settingsButton;
+    private MediaPlayer mediaPlayer;
 
     // Define the categories
     String[] categories = {"Math", "Science", "General Knowledge", "Random"};
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         welcomeTextView = findViewById(R.id.WelcomeTV);
         playIndividuallyButton = findViewById(R.id.playIndividuallyButton);
-        selectedCategoryButton = null;  // To keep track of the selected category
+        selectedCategoryButton = null;
 
         // Get the current user from FirebaseAuth and Check if the user is authenticated
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -44,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Set up MediaPlayer
+        mediaPlayer = MediaPlayer.create(this, R.raw.sound_tracks);
+        mediaPlayer.setLooping(true);
+
         // Logout button
         logoutButton = findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -55,20 +62,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-// Loop through the categories and create buttons with radio button styling for each
+        // Loop through the categories and create buttons with radio button styling for each
         LinearLayout layout = findViewById(R.id.button_cat);
         for (String category : categories) {
             Button button = new Button(this);
             button.setText(category);
             button.setId(View.generateViewId());
-            button.setBackground(getDrawable(R.drawable.radio_button_background));  // Use a drawable for the radio button style
+            button.setBackground(getDrawable(R.drawable.radio_button_background));
 
             // Set margins to create spacing between buttons
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.button_margin_bottom)); // Adjust margin as needed
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.button_margin_bottom));
 
             button.setLayoutParams(params);
 
@@ -81,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
             layout.addView(button);
         }
 
-
         // Play Individually button
         playIndividuallyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,27 +97,81 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Settings button
+        settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Start the SettingsActivity when the settings button is clicked
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+            }
+        });
+
+        // Leaderboard button
+        Button leaderboardButton = findViewById(R.id.leaderboardButton);
+        leaderboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, LeaderboardActivity.class));
+            }
+        });
+
+        // Rules button
+        Button aboutButton = findViewById(R.id.aboutButton);
+        aboutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Check if the sound is enabled and the MediaPlayer is not already playing
+        updateSoundState();
+    }
+
+    private void updateSoundState() {
+        boolean isSoundEnabled = SoundPreferenceUtil.isSoundEnabled(this);
+
+        if (isSoundEnabled && !mediaPlayer.isPlaying()) {
+            mediaPlayer.setVolume(1.0f, 1.0f);
+            mediaPlayer.start();
+        } else if (!isSoundEnabled && mediaPlayer.isPlaying()) {
+            // If sound is disabled but the MediaPlayer is playing, pause it
+            mediaPlayer.pause();
+        }
     }
 
     // Method to handle button clicks for category selection
     void onCategoryButtonClicked(Button clickedButton) {
         if (selectedCategoryButton != null) {
-            // Reset the background and text color of the previously selected button
             selectedCategoryButton.setBackground(getDrawable(R.drawable.radio_button_background));
-            selectedCategoryButton.setTextColor(getColor(R.color.default_text_color)); // Change to your default text color
+            selectedCategoryButton.setTextColor(getColor(R.color.default_text_color));
         }
 
-        // Set the background and text color of the clicked button to indicate selection
         clickedButton.setBackground(getDrawable(R.drawable.radio_button_selected_background));
-        clickedButton.setTextColor(getColor(R.color.selected_text_color)); // Change to your selected text color
+        clickedButton.setTextColor(getColor(R.color.selected_text_color));
         selectedCategoryButton = clickedButton;
     }
-
 
     // Method to open the subcategories
     void openSubCategories(String category) {
         Intent intent = new Intent(this, SubCategoryActivity.class);
         intent.putExtra("CATEGORY", category);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }

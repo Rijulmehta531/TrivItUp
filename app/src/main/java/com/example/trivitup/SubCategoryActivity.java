@@ -70,7 +70,7 @@ public class SubCategoryActivity extends AppCompatActivity {
             //Catgories Math
             case "Algebra":
                 questions.add(new Question("What is the formula for the quadratic equation?", new String[]{"A. x = (-b ± √(b² - 4ac)) / (2a)", "B. x = -b ± √(b² - 4ac) / 2a", "C. x = (b ± √(b² + 4ac)) / 2a", "D. x = -b ± √(b² + 4ac) / (2a)"}, 0));
-                questions.add(new Question("Solve for x: 2x + 5 = 13", new String[]{"A. 7", "B. 4", "C. 3", "D. 9"}, 0));
+                questions.add(new Question("Solve for x: 2x + 5 = 13", new String[]{"A. 7", "B. 4", "C. 3", "D. 9"}, 1));
                 questions.add(new Question("What is the distributive property in algebra?", new String[]{"A. a(b + c) = ab + ac", "B. a(b - c) = ab - ac", "C. a(b + c) = ab - ac", "D. a(b - c) = ab + ac"}, 0));
                 break;
 
