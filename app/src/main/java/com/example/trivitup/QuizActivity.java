@@ -217,9 +217,8 @@ public class QuizActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Wrong! Correct answer is Option " + (currentQuestion.getCorrectOptionIndex() + 1), Toast.LENGTH_SHORT).show();
             }
-
-            currentQuestionIndex++;
             displayQuestionInfo();
+            currentQuestionIndex++;
             if (currentQuestionIndex < questions.size()) {
                 displayQuestion(questions.get(currentQuestionIndex));
                 startCountdownTimer();
