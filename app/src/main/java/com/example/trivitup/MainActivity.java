@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.content.SharedPreferences;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private Button selectedCategoryButton;
     private Button settingsButton;
     private MediaPlayer mediaPlayer;
+    private boolean isDarkModeEnabled = false;
+
 
     // Define the categories
     String[] categories = {"Math", "Science", "General Knowledge", "Random"};
@@ -33,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         welcomeTextView = findViewById(R.id.WelcomeTV);
         playIndividuallyButton = findViewById(R.id.playIndividuallyButton);
         selectedCategoryButton = null;
+
+        SharedPreferences preferences = getSharedPreferences("settings", MODE_PRIVATE);
+        isDarkModeEnabled = preferences.getBoolean("darkMode", false);
 
         // Get the current user from FirebaseAuth and Check if the user is authenticated
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -151,7 +157,10 @@ public class MainActivity extends AppCompatActivity {
     void onCategoryButtonClicked(Button clickedButton) {
         if (selectedCategoryButton != null) {
             selectedCategoryButton.setBackground(getDrawable(R.drawable.radio_button_background));
-            selectedCategoryButton.setTextColor(getColor(R.color.default_text_color));
+
+            // Set text color based on dark mode state
+            int textColor = isDarkModeEnabled ? getColor(R.color.white) : getColor(R.color.default_text_color);
+            selectedCategoryButton.setTextColor(textColor);
         }
 
         clickedButton.setBackground(getDrawable(R.drawable.radio_button_selected_background));

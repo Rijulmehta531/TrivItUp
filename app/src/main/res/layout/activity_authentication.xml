@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AuthenticationActivity"
-    android:background="#ffff">
+    android:background="#ffff"
+    tools:context=".AuthenticationActivity">
 
     <ImageView
         android:id="@+id/imageGameLogo"

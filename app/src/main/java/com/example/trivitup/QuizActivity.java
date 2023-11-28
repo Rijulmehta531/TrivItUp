@@ -280,7 +280,11 @@ public class QuizActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.quiz_result_dialog);
 
         TextView resultTextView = dialog.findViewById(R.id.resultTextView);
-        resultTextView.setText("Total Correct Answers: " + correctAnswers);
+        if (correctAnswers == 3) {
+            resultTextView.setText("Total Correct Answers: " + correctAnswers + "\n\nYou earn 10 points.");
+        } else {
+            resultTextView.setText("Total Correct Answers: " + correctAnswers + "\n\nYou earn 0 points.");
+        }
 
         Button goBackButton = dialog.findViewById(R.id.goBackButton);
         goBackButton.setOnClickListener(new View.OnClickListener() {

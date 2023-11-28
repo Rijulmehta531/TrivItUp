@@ -1,4 +1,5 @@
 package com.example.trivitup;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 

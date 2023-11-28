@@ -6,7 +6,8 @@ public class LeaderboardEntry {
     private int points;
 
     // Required default constructor for Firebase
-    public LeaderboardEntry() {}
+    public LeaderboardEntry() {
+    }
 
     public LeaderboardEntry(String userId, String displayName, int points) {
         this.userId = userId;
